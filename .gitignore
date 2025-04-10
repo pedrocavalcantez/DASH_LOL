@@ -1,8 +1,8 @@
 # Data files
 data/
-*.db
 *.sqlite
 *.sqlite3
+!lol_data.db
 
 # Python cache files
 __pycache__/
