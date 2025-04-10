@@ -6,14 +6,14 @@ import pandas as pd
 import os
 
 # Initialize the Dash app
-app = dash.Dash(
+dash_app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     suppress_callback_exceptions=True,
 )
 
 # Define the layout
-app.layout = html.Div(
+dash_app.layout = html.Div(
     [
         dcc.Location(id="url", refresh=False),
         dbc.NavbarSimple(
@@ -54,7 +54,7 @@ from pages.head2head_champions import layout as head2head_champions_layout
 
 
 # Callback to switch between pages
-@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+@dash_app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def display_page(pathname):
     if pathname == "/players":
         return players_layout
@@ -83,8 +83,8 @@ def display_page(pathname):
         )
 
 
-# Expose the server variable for Gunicorn
-server = app.server
+# Create the Flask app for Gunicorn
+app = dash_app.server
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    dash_app.run_server(debug=True)
