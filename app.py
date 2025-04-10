@@ -64,7 +64,7 @@ def display_page(pathname):
         return teams_layout
     elif pathname == "/patch":
         return patch_layout
-    elif pathname == "/best-matches":  # ⬅️ Novo caminho
+    elif pathname == "/best-matches":
         return champions_sinergys_counters_layout
     elif pathname == "/head2head-players":
         return head2head_players_layout
@@ -82,6 +82,9 @@ def display_page(pathname):
             ]
         )
 
+
+# Expose the server variable for Gunicorn
+server = app.server
 
 if __name__ == "__main__":
     app.run_server(debug=True)
