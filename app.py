@@ -23,33 +23,40 @@ dash_app.index_string = '''
         {%css%}
         <style>
             body {
-                background-color: #1a1a2e;
+                background-color: #1a1a1a;
                 color: #e6e6e6;
             }
             .navbar {
                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                background-color: #2d2d2d !important;
             }
             .nav-link {
                 transition: all 0.3s ease;
+                color: #e6e6e6 !important;
             }
             .nav-link:hover {
                 transform: translateY(-2px);
+                color: #ffffff !important;
             }
             .card {
-                background-color: #16213e;
+                background-color: #2d2d2d;
                 border: none;
                 border-radius: 10px;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                 margin-bottom: 20px;
             }
             .card-header {
-                background-color: #0f3460;
+                background-color: #404040;
                 border-bottom: none;
                 border-radius: 10px 10px 0 0;
             }
             .table {
-                background-color: #16213e;
+                background-color: #2d2d2d;
                 border-radius: 8px;
+                color: #e6e6e6;
+            }
+            .table-hover tbody tr:hover {
+                background-color: #404040;
             }
         </style>
     </head>

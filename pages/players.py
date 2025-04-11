@@ -185,7 +185,14 @@ def update_player_stats(selected_player, date_index_range):
         x=["kills", "deaths", "assists"],
         title=f"KDA Stats for {selected_player}",
         labels={"value": "Average", "variable": "Stat"},
-        color_discrete_sequence=px.colors.qualitative.Set3,
+        color_discrete_sequence=['#00ff87', '#ff4b4b', '#4b96ff'],
+        template="plotly_dark"
+    )
+    kda_fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#e6e6e6'),
+        margin=dict(l=40, r=40, t=40, b=40)
     )
 
     gold_fig = px.line(
@@ -194,7 +201,15 @@ def update_player_stats(selected_player, date_index_range):
         y="totalgold",
         title=f"Gold Progression for {selected_player}",
         labels={"totalgold": "Gold", "date": "Date"},
+        template="plotly_dark"
     )
+    gold_fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#e6e6e6'),
+        margin=dict(l=40, r=40, t=40, b=40)
+    )
+    gold_fig.update_traces(line_color='#00ff87')
 
     stats_table = dbc.Table(
         [
