@@ -14,6 +14,8 @@ from database.shared import (
     get_all_columns,
     get_all_leagues,
     get_all_patches,
+    get_all_players,
+    get_all_teams,
 )
 from database.patch import get_patch_champion_stats
 from database.champions_sinergys_counters import (
@@ -138,3 +140,9 @@ class DataProcessor:
         return get_head2head_match_history_champions(
             champ1, champ2, start_date, end_date, leagues
         )
+
+    def get_all_players(self, league=None):
+        return get_all_players(league)
+
+    def get_all_teams(self, league=None):
+        return get_all_teams(league)

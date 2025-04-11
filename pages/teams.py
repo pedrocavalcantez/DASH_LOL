@@ -7,10 +7,12 @@ import pandas as pd
 data_processor = DataProcessor()
 
 # Dropdown options
-teams = data_processor.get_team_stats()["teamname"].unique()
-teams = [team for team in teams if pd.notna(team) and team.strip()]
+leagues = data_processor.get_all_leagues()
+teams = data_processor.get_all_teams()
+
 # print(teams[0:3])
 # Date slider options
+
 all_dates = data_processor.get_all_dates()
 all_dates = sorted(pd.to_datetime(all_dates).dt.date.unique())
 date_marks = {i: str(date) for i, date in enumerate(all_dates)}
@@ -22,6 +24,19 @@ layout = html.Div(
                 html.H1("Team Statistics", className="mb-4"),
                 dbc.Row(
                     [
+                        dbc.Col(
+                            [
+                                html.Label("Select League:"),
+                                dcc.Dropdown(
+                                    id="league-dropdown",
+                                    options=[{"label": l, "value": l} for l in leagues],
+                                    value=None,
+                                    placeholder="Select a league",
+                                    clearable=True,
+                                ),
+                            ],
+                            width=6,
+                        ),
                         dbc.Col(
                             [
                                 html.Label("Select Team:"),
@@ -111,6 +126,16 @@ layout = html.Div(
 )
 
 
+@callback(Output("team-dropdown", "options"), Input("league-dropdown", "value"))
+def update_team_dropdown(selected_league):
+    # if not selected_league:
+    #     return []
+    # print(selected_league)
+    list_teams = data_processor.get_all_teams(selected_league)
+    # print(list_players)
+    return [{"label": team, "value": team} for team in list_teams]
+
+
 @callback(
     [
         Output("team-winrate-graph", "figure"),
@@ -118,7 +143,7 @@ layout = html.Div(
         Output("team-stats-table", "children"),
         Output("team-match-history", "children"),
         Output("team-most-picked-champions", "children"),
-        Output("team-content", "style"),  # controla visibilidade
+        Output("team-content", "style"),
     ],
     [Input("team-dropdown", "value"), Input("date-slider", "value")],
 )

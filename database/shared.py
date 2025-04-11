@@ -23,3 +23,49 @@ def get_all_patches():
     conn = get_conn()
     query = "SELECT DISTINCT patch FROM matches ORDER BY patch"
     return pd.read_sql_query(query, conn)["patch"].tolist()
+
+
+def get_all_players(league=None):
+    conn = get_conn()
+    base_query = """
+        SELECT DISTINCT playername
+        FROM matches
+        WHERE position != 'team'
+    """
+
+    params = []
+    if league:
+        base_query += " AND league = ?"
+        params.append(league)
+
+    base_query += " ORDER BY playername"
+
+    return (
+        pd.read_sql_query(base_query, conn, params=params)["playername"]
+        .dropna()
+        .str.strip()
+        .tolist()
+    )
+
+
+def get_all_teams(league=None):
+    conn = get_conn()
+    base_query = """
+        SELECT DISTINCT teamname
+        FROM matches
+        WHERE position != 'team'
+    """
+
+    params = []
+    if league:
+        base_query += " AND league = ?"
+        params.append(league)
+
+    base_query += " ORDER BY teamname"
+
+    return (
+        pd.read_sql_query(base_query, conn, params=params)["teamname"]
+        .dropna()
+        .str.strip()
+        .tolist()
+    )

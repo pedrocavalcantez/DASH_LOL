@@ -1,16 +1,20 @@
 from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
 import plotly.express as px
-from data_processor import DataProcessor
 import pandas as pd
+from data_processor import DataProcessor
 
 data_processor = DataProcessor()
 
-players = data_processor.get_player_stats()["playername"].unique()
-players = [player for player in players if pd.notna(player) and player.strip()]
-# print(players[0:3])
+# Carrega ligas e datas
+leagues = data_processor.get_all_leagues()
+
+list_players = data_processor.get_all_players()
+
+
 all_dates = data_processor.get_all_dates()
 all_dates = sorted(pd.to_datetime(all_dates).dt.date.unique())
+
 date_marks = {i: str(date) for i, date in enumerate(all_dates)}
 
 layout = html.Div(
@@ -18,23 +22,41 @@ layout = html.Div(
         dbc.Container(
             [
                 html.H1("Player Statistics", className="mb-4"),
-                # 🎯 Filtros: sempre visíveis
                 dbc.Row(
                     [
+                        dbc.Col(
+                            [
+                                html.Label("Select League:"),
+                                dcc.Dropdown(
+                                    id="league-dropdown",
+                                    options=[{"label": l, "value": l} for l in leagues],
+                                    value=None,
+                                    placeholder="Select a league",
+                                    clearable=True,
+                                ),
+                            ],
+                            width=6,
+                        ),
                         dbc.Col(
                             [
                                 html.Label("Select Player:"),
                                 dcc.Dropdown(
                                     id="player-dropdown",
                                     options=[
-                                        {"label": player, "value": player}
-                                        for player in players
+                                        {"label": p, "value": p} for p in list_players
                                     ],
                                     value=None,
+                                    placeholder="Select a player",
+                                    clearable=True,
                                 ),
                             ],
                             width=6,
                         ),
+                    ],
+                    className="mb-4",
+                ),
+                dbc.Row(
+                    [
                         dbc.Col(
                             [
                                 html.Label("Select Date Range:"),
@@ -58,12 +80,11 @@ layout = html.Div(
                                     allowCross=False,
                                 ),
                             ],
-                            width=6,
+                            width=12,
                         ),
                     ],
                     className="mb-4",
                 ),
-                # 📦 Conteúdo condicional: esse será ocultado no callback
                 html.Div(
                     id="player-content",
                     children=[
@@ -113,6 +134,16 @@ layout = html.Div(
 )
 
 
+@callback(Output("player-dropdown", "options"), Input("league-dropdown", "value"))
+def update_player_dropdown(selected_league):
+    # if not selected_league:
+    #     return []
+    # print(selected_league)
+    list_players = data_processor.get_all_players(selected_league)
+    # print(list_players)
+    return [{"label": p, "value": p} for p in list_players]
+
+
 @callback(
     [
         Output("player-kda-graph", "figure"),
@@ -129,8 +160,7 @@ layout = html.Div(
 )
 def update_player_stats(selected_player, date_index_range):
     if not selected_player:
-        hidden = {"display": "none"}
-        return {}, {}, html.Div(), html.Div(), html.Div(), hidden
+        return {}, {}, html.Div(), html.Div(), html.Div(), {"display": "none"}
 
     start_date = str(all_dates[int(date_index_range[0])])
     end_date = str(all_dates[int(date_index_range[1])])
@@ -147,6 +177,7 @@ def update_player_stats(selected_player, date_index_range):
             html.Div("No data available in selected range"),
             html.Div(),
             html.Div(),
+            {},
         )
 
     kda_fig = px.bar(
@@ -289,4 +320,5 @@ def update_player_stats(selected_player, date_index_range):
         hover=True,
         size="sm",
     )
+
     return kda_fig, gold_fig, stats_table, history_table, champions_table, {}
