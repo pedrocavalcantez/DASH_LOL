@@ -8,69 +8,11 @@ import os
 # Initialize the Dash app
 dash_app = dash.Dash(
     __name__,
-    external_stylesheets=[dbc.themes.VAPOR],
+    external_stylesheets=[dbc.themes.CYBORG],
     suppress_callback_exceptions=True,
 )
 
 # Custom CSS
-dash_app.index_string = '''
-<!DOCTYPE html>
-<html>
-    <head>
-        {%metas%}
-        <title>{%title%}</title>
-        {%favicon%}
-        {%css%}
-        <style>
-            body {
-                background-color: #1a1a1a;
-                color: #e6e6e6;
-            }
-            .navbar {
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                background-color: #2d2d2d !important;
-            }
-            .nav-link {
-                transition: all 0.3s ease;
-                color: #e6e6e6 !important;
-            }
-            .nav-link:hover {
-                transform: translateY(-2px);
-                color: #ffffff !important;
-            }
-            .card {
-                background-color: #2d2d2d;
-                border: none;
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                margin-bottom: 20px;
-            }
-            .card-header {
-                background-color: #404040;
-                border-bottom: none;
-                border-radius: 10px 10px 0 0;
-            }
-            .table {
-                background-color: #2d2d2d;
-                border-radius: 8px;
-                color: #e6e6e6;
-            }
-            .table-hover tbody tr:hover {
-                background-color: #404040;
-            }
-        </style>
-    </head>
-    <body>
-        {%app_entry%}
-        <footer>
-            {%config%}
-            {%scripts%}
-            {%renderer%}
-        </footer>
-    </body>
-</html>
-'''
-
 # Define the layout
 dash_app.layout = html.Div(
     [
@@ -83,7 +25,11 @@ dash_app.layout = html.Div(
                             dbc.Row(
                                 [
                                     dbc.Col(html.I(className="fas fa-gamepad me-2")),
-                                    dbc.Col(dbc.NavbarBrand("LoL Dashboard", className="ms-2")),
+                                    dbc.Col(
+                                        dbc.NavbarBrand(
+                                            "LoL Dashboard", className="ms-2"
+                                        )
+                                    ),
                                 ],
                                 align="center",
                                 className="g-0",
@@ -95,16 +41,46 @@ dash_app.layout = html.Div(
                         dbc.Collapse(
                             dbc.Nav(
                                 [
-                                    dbc.NavItem(dbc.NavLink("Players", href="/players", className="px-3")),
-                                    dbc.NavItem(dbc.NavLink("Champions", href="/champions", className="px-3")),
-                                    dbc.NavItem(dbc.NavLink("Teams", href="/teams", className="px-3")),
-                                    dbc.NavItem(dbc.NavLink("Patch", href="/patch", className="px-3")),
-                                    dbc.NavItem(dbc.NavLink("Best Matches", href="/best-matches", className="px-3")),
+                                    dbc.NavItem(
+                                        dbc.NavLink(
+                                            "Players", href="/players", className="px-3"
+                                        )
+                                    ),
+                                    dbc.NavItem(
+                                        dbc.NavLink(
+                                            "Champions",
+                                            href="/champions",
+                                            className="px-3",
+                                        )
+                                    ),
+                                    dbc.NavItem(
+                                        dbc.NavLink(
+                                            "Teams", href="/teams", className="px-3"
+                                        )
+                                    ),
+                                    dbc.NavItem(
+                                        dbc.NavLink(
+                                            "Patch", href="/patch", className="px-3"
+                                        )
+                                    ),
+                                    dbc.NavItem(
+                                        dbc.NavLink(
+                                            "Best Matches",
+                                            href="/best-matches",
+                                            className="px-3",
+                                        )
+                                    ),
                                     dbc.DropdownMenu(
                                         [
-                                            dbc.DropdownMenuItem("Players", href="/head2head-players"),
-                                            dbc.DropdownMenuItem("Teams", href="/head2head-teams"),
-                                            dbc.DropdownMenuItem("Champions", href="/head2head-champions"),
+                                            dbc.DropdownMenuItem(
+                                                "Players", href="/head2head-players"
+                                            ),
+                                            dbc.DropdownMenuItem(
+                                                "Teams", href="/head2head-teams"
+                                            ),
+                                            dbc.DropdownMenuItem(
+                                                "Champions", href="/head2head-champions"
+                                            ),
                                         ],
                                         nav=True,
                                         label="Head2Head",
@@ -162,47 +138,111 @@ def display_page(pathname):
     elif pathname == "/head2head-champions":
         return head2head_champions_layout
     else:
-        return dbc.Container([
-            dbc.Row([
-                dbc.Col([
-                    html.Div([
-                        html.H1("Welcome to LoL Dashboard", 
-                               className="display-4 text-center mb-4"),
-                        html.P("Explore professional League of Legends statistics and analysis",
-                               className="lead text-center mb-5"),
-                        dbc.Row([
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardBody([
-                                        html.H4("Players", className="card-title"),
-                                        html.P("View player statistics and performance metrics"),
-                                        dbc.Button("Explore Players", href="/players", color="primary"),
-                                    ])
-                                ])
-                            ], width=4),
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardBody([
-                                        html.H4("Champions", className="card-title"),
-                                        html.P("Analyze champion win rates and meta trends"),
-                                        dbc.Button("View Champions", href="/champions", color="primary"),
-                                    ])
-                                ])
-                            ], width=4),
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardBody([
-                                        html.H4("Teams", className="card-title"),
-                                        html.P("Compare team performances and statistics"),
-                                        dbc.Button("See Teams", href="/teams", color="primary"),
-                                    ])
-                                ])
-                            ], width=4),
-                        ], className="mb-4"),
-                    ], className="py-5")
-                ])
-            ])
-        ])
+        return dbc.Container(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    [
+                                        html.H1(
+                                            "Welcome to LoL Dashboard",
+                                            className="display-4 text-center mb-4",
+                                        ),
+                                        html.P(
+                                            "Explore professional League of Legends statistics and analysis",
+                                            className="lead text-center mb-5",
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    [
+                                                        dbc.Card(
+                                                            [
+                                                                dbc.CardBody(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Players",
+                                                                            className="card-title",
+                                                                        ),
+                                                                        html.P(
+                                                                            "View player statistics and performance metrics"
+                                                                        ),
+                                                                        dbc.Button(
+                                                                            "Explore Players",
+                                                                            href="/players",
+                                                                            color="primary",
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    width=4,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        dbc.Card(
+                                                            [
+                                                                dbc.CardBody(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Champions",
+                                                                            className="card-title",
+                                                                        ),
+                                                                        html.P(
+                                                                            "Analyze champion win rates and meta trends"
+                                                                        ),
+                                                                        dbc.Button(
+                                                                            "View Champions",
+                                                                            href="/champions",
+                                                                            color="primary",
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    width=4,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        dbc.Card(
+                                                            [
+                                                                dbc.CardBody(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Teams",
+                                                                            className="card-title",
+                                                                        ),
+                                                                        html.P(
+                                                                            "Compare team performances and statistics"
+                                                                        ),
+                                                                        dbc.Button(
+                                                                            "See Teams",
+                                                                            href="/teams",
+                                                                            color="primary",
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    width=4,
+                                                ),
+                                            ],
+                                            className="mb-4",
+                                        ),
+                                    ],
+                                    className="py-5",
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ]
+        )
 
 
 # Create the Flask app for Gunicorn

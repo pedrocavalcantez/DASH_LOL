@@ -1,0 +1,123 @@
+/* === BASE STYLES === */
+body {
+  background: linear-gradient(to bottom right, #1f1f1f, #2c2c2c);
+  color: #e6e6e6;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* === HEADERS === */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* === NAVBAR === */
+.navbar {
+  background-color: #2b2b2b !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.nav-link {
+  color: #e6e6e6 !important;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ffffff !important;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* === CARDS & CONTAINERS === */
+.card,
+.dbc-row,
+.dbc-col,
+.table {
+  border-radius: 12px;
+}
+
+.card {
+  background-color: #2d2d2d;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.card-header {
+  background-color: #3a3a3a;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #444;
+  border-radius: 12px 12px 0 0;
+}
+
+/* === TABLES === */
+.table {
+  background-color: #292929;
+  color: #e6e6e6;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.table thead th {
+  background-color: #3a3a3a;
+  border: none;
+}
+
+.table tbody tr {
+  transition: background 0.2s;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #404040;
+}
+
+.table-success {
+  background-color: #2e4f30 !important;
+}
+
+.table-danger {
+  background-color: #4f2e2e !important;
+}
+
+/* === DROPDOWNS (dcc.Dropdown / React-select) === */
+.Select-control,
+.Select-menu-outer,
+.VirtualizedSelectOption,
+.Select-value {
+  background-color: #2b2b2b !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+.Select-placeholder {
+  color: #aaa !important;
+}
+
+.Select-menu-outer {
+  border: 1px solid #444 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.VirtualizedSelectOption {
+  padding: 8px 12px;
+  transition: background 0.2s;
+}
+
+.VirtualizedSelectOption:hover {
+  background-color: #3a3a3a !important;
+}
+
+/* === FOOTER === */
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #777;
+}
