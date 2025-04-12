@@ -27,9 +27,30 @@ class Database:
             print("Database already initialized")
             return
         # data_dir="Z:/Repositorios Pessoais/DASH_LOL/data"
+        # data_dir="D:/Codigos/DASH_LOL/data"
         all_files = [f for f in os.listdir(data_dir) if f.endswith(".csv")]
         dfs = [pd.read_csv(os.path.join(data_dir, f)) for f in all_files]
         combined_df = pd.concat(dfs, ignore_index=True)
+        ban_df = combined_df.groupby("gameid").last().reset_index()
+        ban_df = ban_df[
+            [
+                "gameid",
+                "date",
+                "league",
+                "teamname",
+                "ban1",
+                "ban2",
+                "ban3",
+                "ban4",
+                "ban5",
+            ]
+        ].melt(
+            id_vars=["date", "gameid", "league", "teamname"],
+            var_name="ban_position",
+            value_name="champion",
+        )
+        # ban_df=ban_df.champion.unique()
+
         combined_df = combined_df.query("datacompleteness=='complete'").drop(
             columns=[
                 "datacompleteness",
@@ -69,7 +90,10 @@ class Database:
         ]:
             combined_df[col] = combined_df[col].astype("category")
 
-        gameids = combined_df["gameid"].astype("category").cat.codes
+        gameids_dict = dict(
+            zip(combined_df["gameid"], range(len(combined_df["gameid"].unique())))
+        )
+        gameids = combined_df["gameid"].map(gameids_dict)
         combined_df["gameid"] = pd.to_numeric(gameids, downcast="unsigned")
 
         combined_df["date"] = pd.to_datetime(combined_df["date"]).astype("string")
@@ -90,6 +114,7 @@ class Database:
         # Remover colunas com valor único
         for col in combined_df.columns:
             if combined_df[col].nunique(dropna=False) == 1:
+                print(col)
                 combined_df.drop(columns=col, inplace=True)
         # pd.DataFrame(combined_df.dtypes).to_clipboard()
         # SELECT JUST SOME COLUMNS
@@ -101,8 +126,15 @@ class Database:
             combined_df["kills"] + combined_df["assists"]
         ) / combined_df["deaths"].replace(0, 1)
 
-        combined_df = combined_df.query("date>='2023-01-01'")
+        ban_df = ban_df.dropna()
+
+        ban_df.loc[:, "gameid"] = ban_df["gameid"].map(gameids_dict)
+        ban_df.dropna(inplace=True)
+        ban_df.loc[:, "gameid"] = pd.to_numeric(ban_df["gameid"], downcast="unsigned")
+
+        # combined_df = combined_df.query("date>='2023-01-01'")
         combined_df.to_sql("matches", self.conn, if_exists="replace", index=False)
+        ban_df.to_sql("bans", self.conn, if_exists="replace", index=False)
         self.cursor.execute("VACUUM")
         self.cursor.execute("CREATE INDEX idx_playername ON matches(playername)")
         self.cursor.execute("CREATE INDEX idx_champion ON matches(champion)")

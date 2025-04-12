@@ -121,3 +121,14 @@ footer {
   font-size: 0.9em;
   color: #777;
 }
+
+.Select--single > .Select-control .Select-value {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.Select-value-label {
+  color: #fdfdfd !important;
+  font-weight: 500;
+  opacity: 1 !important;
+}
