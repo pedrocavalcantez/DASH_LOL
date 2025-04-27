@@ -3,6 +3,7 @@ data/
 *.sqlite
 *.sqlite3
 !lol_data.db
+*.csv
 
 # Python cache files
 __pycache__/
